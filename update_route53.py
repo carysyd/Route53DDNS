@@ -48,14 +48,10 @@ def main():
     public_ip = get_public_ip()
     print("Public IP address is: %s" % public_ip)
 
-# aws_access_key_id='AKIA4GCRBDJI4TAO5I2G'
-# aws_secret_access_key='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'
-
     client = boto3.client('route53',
         aws_access_key_id=args.AWSAccessKeyId,
         aws_secret_access_key=args.AWSSecretKey)
 
-# dns_config = DNSConfig('/hostedzone/Z1NYRZ306RYBQD', 'caryli.com', 'vpn.caryli.com')
     dns_config = DNSConfig(args.HostedZoneId, args.Record)
 
     update_route53_record(client, dns_config, public_ip)
