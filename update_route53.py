@@ -4,6 +4,7 @@
 # about the Requests library here: http://docs.python-requests.org/en/latest/
 import argparse
 import boto3
+import os
 from requests import get
 
 class DNSConfig:
@@ -38,10 +39,10 @@ def main():
 
     parser = argparse.ArgumentParser(description='Update Route53 DNS record')
 
-    parser.add_argument('--AWSAccessKeyId', required=True, type=str)
-    parser.add_argument('--AWSSecretKey', required=True, type=str)
-    parser.add_argument('--HostedZoneId', required=True, type=str)
-    parser.add_argument('--Record', required=True, type=str)
+    parser.add_argument('--AWSAccessKeyId', type=str, default=os.environ.get('AWSAccessKeyId', None))
+    parser.add_argument('--AWSSecretKey', type=str, default=os.environ.get('AWSSecretKey', None))
+    parser.add_argument('--HostedZoneId', type=str, default=os.environ.get('HostedZoneId', None))
+    parser.add_argument('--Record', type=str, default=os.environ.get('Record', None))
 
     args = parser.parse_args()
 
@@ -56,6 +57,7 @@ def main():
 
     update_route53_record(client, dns_config, public_ip)
 
+    print("Updated DNS record: %s" % args.Record)
   
 if __name__== "__main__":
   main()
