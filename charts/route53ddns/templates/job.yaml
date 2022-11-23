@@ -1,0 +1,28 @@
+{{- $name := .Values.dns.hostedZoneId | required ".Values.dns.hostedZoneId is required." -}}
+{{- $name := .Values.dns.hostedZoneRecord | required ".Values.dns.hostedZoneRecord is required." -}}
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: route53ddns
+spec:
+  # hourly scheduled run
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: route53ddns
+            image: {{ .Values.image.repository }}
+            imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+            env:
+              - name: HostedZoneId
+                value: {{ .Values.dns.hostedZoneId }}
+              - name: Record
+                value: {{ .Values.dns.hostedZoneRecord }}
+            envFrom:
+              - secretRef:
+                  name: iamsecret
+          restartPolicy: Never

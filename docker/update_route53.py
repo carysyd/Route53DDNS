@@ -39,8 +39,6 @@ def main():
 
     parser = argparse.ArgumentParser(description='Update Route53 DNS record')
 
-    parser.add_argument('--AWSAccessKeyId', type=str, default=os.environ.get('AWSAccessKeyId', None))
-    parser.add_argument('--AWSSecretKey', type=str, default=os.environ.get('AWSSecretKey', None))
     parser.add_argument('--HostedZoneId', type=str, default=os.environ.get('HostedZoneId', None))
     parser.add_argument('--Record', type=str, default=os.environ.get('Record', None))
 
@@ -49,9 +47,7 @@ def main():
     public_ip = get_public_ip()
     print("Public IP address is: %s" % public_ip)
 
-    client = boto3.client('route53',
-        aws_access_key_id=args.AWSAccessKeyId,
-        aws_secret_access_key=args.AWSSecretKey)
+    client = boto3.client('route53')
 
     dns_config = DNSConfig(args.HostedZoneId, args.Record)
 
